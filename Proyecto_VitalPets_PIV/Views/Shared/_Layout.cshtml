@@ -1,0 +1,42 @@
+﻿<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">VeterinariaApp</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+
+                <!-- Menú de Usuario -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="usuarioDropdown" role="button" data-bs-toggle="dropdown">
+                        Usuario
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/Usuario/Registrar">Registrar cuenta</a></li>
+                        <li><a class="dropdown-item" href="/Usuario/Login">Iniciar sesión</a></li>
+                        <li><a class="dropdown-item" href="/Mascota/Registrar">Registrar mascota</a></li>
+                        <li><a class="dropdown-item" href="/Carnet/Consultar">Consultar carnet digital</a></li>
+                        <li><a class="dropdown-item" href="/Cita/Agendar">Agendar cita</a></li>
+                        <li><a class="dropdown-item" href="/Cita/Reprogramar">Reprogramar cita</a></li>
+                        <li><a class="dropdown-item" href="/Cita/Cancelar">Cancelar cita</a></li>
+                        <li><a class="dropdown-item" href="/Historial/Consultar">Consultar historial médico</a></li>
+                    </ul>
+                </li>
+
+                <!-- Menú de Veterinario -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="veterinarioDropdown" role="button" data-bs-toggle="dropdown">
+                        Veterinario
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/Veterinario/MascotasAgendadas">Consultar mascotas agendadas</a></li>
+                        <li><a class="dropdown-item" href="/Veterinario/HistorialMedico">Revisar historial médico</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
