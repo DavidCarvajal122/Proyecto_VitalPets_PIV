@@ -1,83 +1,97 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Proyecto_VitalPets_PIV.Data;
+using Proyecto_VitalPets_PIV.Models;
+using System.Linq;
 
 namespace Proyecto_VitalPets_PIV.Controllers
 {
     public class VeterinarioController : Controller
     {
-        // GET: VeterinarioController
+        private readonly ApplicationDbContext _context;
+
+        public VeterinarioController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public ActionResult Index()
         {
-            return View();
+            var veterinarios = _context.Veterinarios.ToList();
+            return View(veterinarios);
         }
 
-        // GET: VeterinarioController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var veterinario = _context.Veterinarios.FirstOrDefault(v => v.Id == id);
+            if (veterinario == null)
+                return NotFound();
+
+            return View(veterinario);
         }
 
-        // GET: VeterinarioController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: VeterinarioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Veterinario veterinario)
         {
-            try
+            if (ModelState.IsValid)
             {
+                _context.Veterinarios.Add(veterinario);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(veterinario);
         }
 
-        // GET: VeterinarioController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var veterinario = _context.Veterinarios.Find(id);
+            if (veterinario == null)
+                return NotFound();
+
+            return View(veterinario);
         }
 
-        // POST: VeterinarioController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Veterinario veterinario)
         {
-            try
+            if (id != veterinario.Id)
+                return NotFound();
+
+            if (ModelState.IsValid)
             {
+                _context.Veterinarios.Update(veterinario);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(veterinario);
         }
 
-        // GET: VeterinarioController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var veterinario = _context.Veterinarios.Find(id);
+            if (veterinario == null)
+                return NotFound();
+
+            return View(veterinario);
         }
 
-        // POST: VeterinarioController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteConfirmed(int id)
         {
-            try
+            var veterinario = _context.Veterinarios.Find(id);
+            if (veterinario != null)
             {
-                return RedirectToAction(nameof(Index));
+                _context.Veterinarios.Remove(veterinario);
+                _context.SaveChanges();
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

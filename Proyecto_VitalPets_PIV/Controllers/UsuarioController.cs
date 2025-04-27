@@ -1,83 +1,97 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Proyecto_VitalPets_PIV.Data;
+using Proyecto_VitalPets_PIV.Models;
+using System.Linq;
 
 namespace Proyecto_VitalPets_PIV.Controllers
 {
     public class UsuarioController : Controller
     {
-        // GET: UsuarioController
+        private readonly ApplicationDbContext _context;
+
+        public UsuarioController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public ActionResult Index()
         {
-            return View();
+            var usuarios = _context.Usuarios.ToList();
+            return View(usuarios);
         }
 
-        // GET: UsuarioController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == id);
+            if (usuario == null)
+                return NotFound();
+
+            return View(usuario);
         }
 
-        // GET: UsuarioController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: UsuarioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Usuario usuario)
         {
-            try
+            if (ModelState.IsValid)
             {
+                _context.Usuarios.Add(usuario);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(usuario);
         }
 
-        // GET: UsuarioController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var usuario = _context.Usuarios.Find(id);
+            if (usuario == null)
+                return NotFound();
+
+            return View(usuario);
         }
 
-        // POST: UsuarioController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Usuario usuario)
         {
-            try
+            if (id != usuario.Id)
+                return NotFound();
+
+            if (ModelState.IsValid)
             {
+                _context.Usuarios.Update(usuario);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(usuario);
         }
 
-        // GET: UsuarioController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var usuario = _context.Usuarios.Find(id);
+            if (usuario == null)
+                return NotFound();
+
+            return View(usuario);
         }
 
-        // POST: UsuarioController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteConfirmed(int id)
         {
-            try
+            var usuario = _context.Usuarios.Find(id);
+            if (usuario != null)
             {
-                return RedirectToAction(nameof(Index));
+                _context.Usuarios.Remove(usuario);
+                _context.SaveChanges();
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

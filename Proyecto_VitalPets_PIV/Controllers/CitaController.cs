@@ -1,83 +1,98 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Proyecto_VitalPets_PIV.Data;
+using Proyecto_VitalPets_PIV.Models;
+using System.Linq;
 
 namespace Proyecto_VitalPets_PIV.Controllers
 {
     public class CitaController : Controller
     {
-        // GET: CitaController
+        private readonly ApplicationDbContext _context;
+
+        public CitaController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public ActionResult Index()
         {
-            return View();
+            var citas = _context.Citas.ToList();
+            return View(citas);
         }
 
-        // GET: CitaController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var cita = _context.Citas.FirstOrDefault(c => c.Id == id);
+            if (cita == null)
+                return NotFound();
+
+            return View(cita);
         }
 
-        // GET: CitaController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: CitaController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Cita cita)
         {
-            try
+            if (ModelState.IsValid)
             {
+                _context.Citas.Add(cita);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(cita);
         }
 
-        // GET: CitaController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var cita = _context.Citas.Find(id);
+            if (cita == null)
+                return NotFound();
+
+            return View(cita);
         }
 
-        // POST: CitaController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Cita cita)
         {
-            try
+            if (id != cita.Id)
+                return NotFound();
+
+            if (ModelState.IsValid)
             {
+                _context.Citas.Update(cita);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(cita);
         }
 
-        // GET: CitaController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var cita = _context.Citas.Find(id);
+            if (cita == null)
+                return NotFound();
+
+            return View(cita);
         }
 
-        // POST: CitaController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteConfirmed(int id)
         {
-            try
+            var cita = _context.Citas.Find(id);
+            if (cita != null)
             {
-                return RedirectToAction(nameof(Index));
+                _context.Citas.Remove(cita);
+                _context.SaveChanges();
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }
+
